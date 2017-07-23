@@ -4,4 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="gray">#444440</color>
+    <color name="pretix_red">#d9534f</color>
+    <color name="pretix_yellow">#f0ad4e</color>
+    <color name="pretix_green">#5cb85c</color>
 </resources>

@@ -12,5 +12,15 @@
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="API Key" />
+        <EditTextPreference
+            android:key="pref_organizer"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Organizer" />
+        <EditTextPreference
+            android:key="pref_event"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Event" />
     </PreferenceCategory>
 </PreferenceScreen>

@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/orderStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/pretix_yellow"
+                android:text="Pending"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:textSize="36sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/labelOrderTotal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Total: "
+                    android:textAlignment="center"
+                    android:textSize="36sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/orderTotal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="42.23"
+                    android:textAlignment="center"
+                    android:textSize="36sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <com.ebanx.swipebtn.SwipeButton
+                android:id="@+id/markAsPaid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                app:inner_text="Mark as Paid"
+                app:inner_text_color="@android:color/white"
+                app:inner_text_size="16sp"
+                app:inner_text_top_padding="18dp"
+                app:inner_text_bottom_padding="18dp"
+                app:inner_text_background="@drawable/shape_rounded"
+                app:button_image_disabled="@drawable/ic_check_black_24dp"
+                app:button_image_enabled="@drawable/ic_check_black_24dp"
+                app:button_left_padding="20dp"
+                app:button_right_padding="20dp"
+                app:button_top_padding="20dp"
+                app:button_bottom_padding="20dp"
+                app:button_background="@drawable/shape_button"
+                app:initial_state="disabled"
+                app:has_activate_state="true" />
+
+            <com.ebanx.swipebtn.SwipeButton
+                android:id="@+id/printButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                app:inner_text="Print Tickets"
+                app:inner_text_color="@android:color/white"
+                app:inner_text_size="16sp"
+                app:inner_text_top_padding="18dp"
+                app:inner_text_bottom_padding="18dp"
+                app:inner_text_background="@drawable/shape_rounded"
+                app:button_image_disabled="@drawable/ic_print_black_24dp"
+                app:button_image_enabled="@drawable/ic_print_black_24dp"
+                app:button_left_padding="20dp"
+                app:button_right_padding="20dp"
+                app:button_top_padding="20dp"
+                app:button_bottom_padding="20dp"
+                app:button_background="@drawable/shape_button"
+                app:initial_state="disabled"
+                app:has_activate_state="true" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/labelCode"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:text="Order:" />
+
+                <TextView
+                    android:id="@+id/orderCode"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:text="123ABC" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/labelPaymentProvider"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:text="Payment Provider:" />
+
+                <TextView
+                    android:id="@+id/paymentProvider"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:text="Cash Payment" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/labelEmail"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:text="eMail:" />
+
+                <TextView
+                    android:id="@+id/email"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="customer@example.com" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/labelOrderDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:text="Order Date:" />
+
+                <TextView
+                    android:id="@+id/orderDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="01.01.1970 00:00:00" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/labelExpiryDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:text="Expiry Date:" />
+
+                <TextView
+                    android:id="@+id/expiryDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="01.01.1970 00:00:00" />
+
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
+
+            <TextView
+                android:id="@+id/labelInternalComment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Internal Comment:" />
+
+            <TextView
+                android:id="@+id/internalComment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="This is a filler-text" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
+
+            <ListView
+                android:id="@+id/orderItems"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
