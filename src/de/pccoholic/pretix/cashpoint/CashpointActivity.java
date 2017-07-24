@@ -29,8 +29,10 @@ import android.widget.Toast;
 
 import com.ebanx.swipebtn.OnActiveListener;
 import com.ebanx.swipebtn.SwipeButton;
+import com.github.paolorotolo.expandableheightlistview.ExpandableHeightListView;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
@@ -261,7 +263,7 @@ public class CashpointActivity extends AppCompatActivity {
                     final TextView orderDate = contentView.findViewById(R.id.orderDate);
                     final TextView expiryDate = contentView.findViewById(R.id.expiryDate);
                     final TextView internalComment = contentView.findViewById(R.id.internalComment);
-                    final ListView orderItems = contentView.findViewById(R.id.orderItems);
+                    final ExpandableHeightListView orderItems = contentView.findViewById(R.id.orderItems);
                     final SwipeButton markAsPaid = (SwipeButton) findViewById(R.id.markAsPaid);
                     final SwipeButton printTickets = (SwipeButton) findViewById(R.id.printButton);
 
@@ -290,7 +292,7 @@ public class CashpointActivity extends AppCompatActivity {
                             printTickets.setOnActiveListener(new OnActiveListener() {
                                 @Override
                                 public void onActive() {
-                                    testPrint();
+                                    printOrderTicket();
                                 }
                             });
                             break;
@@ -320,7 +322,7 @@ public class CashpointActivity extends AppCompatActivity {
 
                     JSONAdapter jSONAdapter = new JSONAdapter(CashpointActivity.this, jArray);
                     orderItems.setAdapter(jSONAdapter);
-
+                    orderItems.setExpanded(true);
                 } else {
                     throw new Exception(response.toString());
                 }
@@ -513,17 +515,35 @@ public class CashpointActivity extends AppCompatActivity {
         }
     }
 
-    private void testPrint() {
-        /*
-        String msg = "Testmessage \n\n\n";
-        SendDataString(msg);
-        */
-        /*
-        byte[] code = PrinterCommand.getBarCommand("Test1234567890", 1, 3, 8);
-        SendDataString("QR Code\n");
-        SendDataByte(new byte[]{0x1b, 0x61, 0x00 });
-        SendDataByte(code);
-        */
+    private void printOrderTicket() {
+        SendDataString("SHA2017 \n\n\n");
+
+        ListView orderItems = (ListView) findViewById(R.id.orderItems);
+        for (int i = 0; i < orderItems.getAdapter().getCount(); i++) {
+            JSONObject item = (JSONObject) orderItems.getAdapter().getItem(i);
+
+            String secret = null;
+            String price = null;
+            Integer ticketType = null;
+            String attendeeName = null;
+            String attendeeEmail = null;
+
+            try {
+                secret = item.getString("secret");
+                price = item.getString("price");
+                ticketType = item.getInt("item");
+                attendeeName = item.getString("attendee_name");
+                attendeeEmail = item.getString("attendee_email");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            SendDataString(itemNames.get(ticketType) + "\n");
+
+            SendDataByte(new byte[]{0x1b, 0x61, 0x00 });
+            SendDataByte(PrinterCommand.getBarCommand((String) secret, 1, 3, 8));
+            SendDataString(secret + "\n\n\n\n\n\n");
+        }
     }
 
     private void SendDataString(String data) {

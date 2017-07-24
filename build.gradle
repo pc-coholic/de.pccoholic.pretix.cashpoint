@@ -22,6 +22,7 @@ dependencies {
     compile 'com.facebook.stetho:stetho-okhttp3:1.5.0'
     compile 'com.joshdholtz.sentry:sentry-android:1.6.0'
     compile 'com.ebanx:swipe-button:0.6.0'
+    compile 'com.github.paolorotolo:expandableheightlistview:1.0.0'
 }
 
 android {
