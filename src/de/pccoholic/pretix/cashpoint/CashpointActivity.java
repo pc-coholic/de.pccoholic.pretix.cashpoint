@@ -1,8 +1,10 @@
 package de.pccoholic.pretix.cashpoint;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,11 +14,12 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -30,12 +33,50 @@ import com.ebanx.swipebtn.SwipeButton;
 
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+
 import eu.pretix.pretixdroid.net.api.PretixApi;
+import zj.com.cn.bluetooth.sdk.BluetoothService;
+import zj.com.command.sdk.PrinterCommand;
 
 public class CashpointActivity extends AppCompatActivity {
+    // Message types sent from the BluetoothService Handler
+    public static final int MESSAGE_STATE_CHANGE = 1;
+    public static final int MESSAGE_READ = 2;
+    public static final int MESSAGE_WRITE = 3;
+    public static final int MESSAGE_DEVICE_NAME = 4;
+    public static final int MESSAGE_TOAST = 5;
+    public static final int MESSAGE_CONNECTION_LOST = 6;
+    public static final int MESSAGE_UNABLE_CONNECT = 7;
+    // Key names received from the BluetoothService Handler
+    public static final String DEVICE_NAME = "device_name";
+    public static final String TOAST = "toast";
+    // Intent request codes
+    private static final int REQUEST_CONNECT_DEVICE = 1;
+    private static final int REQUEST_ENABLE_BT = 2;
+    private static final int REQUEST_CHOSE_BMP = 3;
+    private static final int REQUEST_CAMER = 4;
+    // QRcode
+    private static final int QR_WIDTH = 350;
+    private static final int QR_HEIGHT = 350;
+    // Encoding
+    private static final String CHINESE = "GBK";
+    private static final String THAI = "CP874";
+    private static final String KOREAN = "EUC-KR";
+    private static final String BIG5 = "BIG5";
+    // Name of the connected device
+    private String mConnectedDeviceName = null;
+    // Local Bluetooth adapter
+    private BluetoothAdapter mBluetoothAdapter = null;
+    // Member object for the services
+    private BluetoothService mService = null;
+
+
+
     private View contentView;
     private SharedPreferences prefs;
     private BluetoothDeviceManager deviceManager;
+    private BluetoothDevice printerDevice;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,7 +84,36 @@ public class CashpointActivity extends AppCompatActivity {
         setContentView(R.layout.scannow);
         contentView = this.findViewById(android.R.id.content);
         deviceManager = new BluetoothDeviceManager(this);
+
+        // Get local Bluetooth adapter
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        // If the adapter is null, then Bluetooth is not supported
+        if (mBluetoothAdapter == null) {
+            Toast.makeText(this, "Bluetooth is not available",
+                    Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // If Bluetooth is not on, request that it be enabled.
+        // setupChat() will then be called during onActivityResult
+        if (!mBluetoothAdapter.isEnabled()) {
+            Intent enableIntent = new Intent(
+                    BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+            // Otherwise, setup the session
+        } else {
+            if (mService == null) {
+                mService = new BluetoothService(this, mHandler);
+            }
+        }
+    }
+
 
     @Override
     public void onResume() {
@@ -56,6 +126,14 @@ public class CashpointActivity extends AppCompatActivity {
         filter.addAction("scan.rcv.message");
         registerReceiver(scanReceiver, filter);
 
+        if (mService != null) {
+
+            if (mService.getState() == BluetoothService.STATE_NONE) {
+                // Start the Bluetooth services
+                mService.start();
+            }
+        }
+
         // ToDo: check if preferences are set and launch SettingsActivity if not and show information-Toast
     }
 
@@ -65,6 +143,14 @@ public class CashpointActivity extends AppCompatActivity {
         unregisterReceiver(scanReceiver);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (mService != null) {
+            mService.stop();
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -104,7 +190,7 @@ public class CashpointActivity extends AppCompatActivity {
                 deviceManager.pickDevice(new BluetoothDeviceManager.BluetoothDevicePickResultHandler() {
                     @Override
                     public void onDevicePicked(BluetoothDevice device) {
-                        Log.d("CashpointBluetooth", device.getName());
+                        mService.connect(device);
                     }
                 });
                 return true;
@@ -200,7 +286,7 @@ public class CashpointActivity extends AppCompatActivity {
                             printTickets.setOnActiveListener(new OnActiveListener() {
                                 @Override
                                 public void onActive() {
-                                    Toast.makeText(CashpointActivity.this, "ToDo: Print Tickets", Toast.LENGTH_SHORT).show();
+                                    testPrint();
                                 }
                             });
                             break;
@@ -351,4 +437,94 @@ public class CashpointActivity extends AppCompatActivity {
         }
     }
 
+    private void testPrint() {
+        /*
+        String msg = "Division I is a research and development, production and services in one high-tech research and development, production-oriented enterprises, specializing in POS terminals finance, retail, restaurants, bars, songs and other areas, computer terminals, self-service terminal peripheral equipment R & D, manufacturing and sales! \n company's organizational structure concise and practical, pragmatic style of rigorous, efficient operation. Integrity, dedication, unity, and efficient is the company's corporate philosophy, and constantly strive for today, vibrant, the company will be strong scientific and technological strength, eternal spirit of entrepreneurship, the pioneering and innovative attitude, confidence towards the international information industry, with friends to create brilliant information industry !!! \n\n\n";
+        SendDataString(msg);
+        */
+        /*
+        byte[] code = PrinterCommand.getBarCommand("Test1234567890", 1, 3, 8);
+        SendDataString("QR Code\n");
+        SendDataByte(new byte[]{0x1b, 0x61, 0x00 });
+        SendDataByte(code);
+        */
+    }
+
+    /*
+     * SendDataString
+     */
+    private void SendDataString(String data) {
+
+        if (mService.getState() != BluetoothService.STATE_CONNECTED) {
+            Toast.makeText(this, "Printer not connected", Toast.LENGTH_SHORT)
+                    .show();
+            return;
+        }
+        if (data.length() > 0) {
+            try {
+                mService.write(data.getBytes("GBK"));
+            } catch (UnsupportedEncodingException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /*
+     *SendDataByte
+     */
+    private void SendDataByte(byte[] data) {
+
+        if (mService.getState() != BluetoothService.STATE_CONNECTED) {
+            Toast.makeText(this, "Printer not connected", Toast.LENGTH_SHORT)
+                    .show();
+            return;
+        }
+        mService.write(data);
+    }
+
+    @SuppressLint("HandlerLeak")
+    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MESSAGE_STATE_CHANGE:
+                    switch (msg.arg1) {
+                        case BluetoothService.STATE_CONNECTED:
+                            break;
+                        case BluetoothService.STATE_CONNECTING:
+                            break;
+                        case BluetoothService.STATE_LISTEN:
+                        case BluetoothService.STATE_NONE:
+                            break;
+                    }
+                    break;
+                case MESSAGE_WRITE:
+
+                    break;
+                case MESSAGE_READ:
+
+                    break;
+                case MESSAGE_DEVICE_NAME:
+                    // save the connected device's name
+                    mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
+                    Toast.makeText(getApplicationContext(),
+                            "Connected to " + mConnectedDeviceName,
+                            Toast.LENGTH_SHORT).show();
+                    break;
+                case MESSAGE_TOAST:
+                    Toast.makeText(getApplicationContext(),
+                            msg.getData().getString(TOAST), Toast.LENGTH_SHORT)
+                            .show();
+                    break;
+                case MESSAGE_CONNECTION_LOST:
+                    Toast.makeText(getApplicationContext(), "Device connection was lost",
+                            Toast.LENGTH_SHORT).show();
+                    break;
+                case MESSAGE_UNABLE_CONNECT:
+                    Toast.makeText(getApplicationContext(), "Unable to connect device",
+                            Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+    };
 }
