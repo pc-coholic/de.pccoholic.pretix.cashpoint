@@ -3,19 +3,20 @@ package de.pccoholic.pretix.cashpoint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
+import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.ChangedPackages;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -34,12 +35,14 @@ import eu.pretix.pretixdroid.net.api.PretixApi;
 public class CashpointActivity extends AppCompatActivity {
     private View contentView;
     private SharedPreferences prefs;
+    private BluetoothDeviceManager deviceManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.scannow);
         contentView = this.findViewById(android.R.id.content);
+        deviceManager = new BluetoothDeviceManager(this);
     }
 
     @Override
@@ -96,6 +99,16 @@ public class CashpointActivity extends AppCompatActivity {
                 Intent intent_settings = new Intent(this, SettingsActivity.class);
                 startActivity(intent_settings);
                 return true;
+
+            case R.id.action_printerPicker:
+                deviceManager.pickDevice(new BluetoothDeviceManager.BluetoothDevicePickResultHandler() {
+                    @Override
+                    public void onDevicePicked(BluetoothDevice device) {
+                        Log.d("CashpointBluetooth", device.getName());
+                    }
+                });
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
