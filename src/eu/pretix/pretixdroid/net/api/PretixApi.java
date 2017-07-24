@@ -2,6 +2,7 @@ package eu.pretix.pretixdroid.net.api;
 
 import com.joshdholtz.sentry.Sentry;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -50,6 +51,17 @@ public class PretixApi {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+        return apiCall(request);
+    }
+
+    public JSONObject getItemNames() throws ApiException {
+        Request request = null;
+
+        request = new Request.Builder()
+                .url(url + "api/v1/organizers/" + organizer + "/events/" + event + "/items/")
+                .addHeader("Authorization", "Token " + key)
+                .get()
+                .build();
         return apiCall(request);
     }
 

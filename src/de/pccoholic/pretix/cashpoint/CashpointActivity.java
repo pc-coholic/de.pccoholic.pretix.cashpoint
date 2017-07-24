@@ -23,7 +23,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +34,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 import eu.pretix.pretixdroid.net.api.PretixApi;
 import zj.com.cn.bluetooth.sdk.BluetoothService;
@@ -77,6 +78,7 @@ public class CashpointActivity extends AppCompatActivity {
     private View contentView;
     private SharedPreferences prefs;
     private BluetoothDeviceManager deviceManager;
+    public static Map<Integer,String> itemNames;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,6 +86,7 @@ public class CashpointActivity extends AppCompatActivity {
         setContentView(R.layout.scannow);
         contentView = this.findViewById(android.R.id.content);
         deviceManager = new BluetoothDeviceManager(this);
+        itemNames = new HashMap<Integer, String>();
 
         // Get local Bluetooth adapter
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -135,6 +138,7 @@ public class CashpointActivity extends AppCompatActivity {
         }
 
         // ToDo: check if preferences are set and launch SettingsActivity if not and show information-Toast
+        new GetItemNamesTask(CashpointActivity.this).execute();
     }
 
     @Override
@@ -317,7 +321,6 @@ public class CashpointActivity extends AppCompatActivity {
                     JSONAdapter jSONAdapter = new JSONAdapter(CashpointActivity.this, jArray);
                     orderItems.setAdapter(jSONAdapter);
 
-                    //Toast.makeText(CashpointActivity.this, "ToDo: Populate ListView with OrderItems", Toast.LENGTH_SHORT).show();
                 } else {
                     throw new Exception(response.toString());
                 }
@@ -334,6 +337,75 @@ public class CashpointActivity extends AppCompatActivity {
             }
         }
     }
+
+    private class GetItemNamesTask extends AsyncTask<String, Void, JSONObject> {
+        private Exception exception;
+        private Context context;
+        private ProgressDialog progressDialog;
+        private AlertDialog.Builder alertDialog;
+
+        public GetItemNamesTask(Context context) {
+            this.context = context;
+        }
+
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(context);
+            progressDialog.setCancelable(true);
+            progressDialog.setMessage("Loading Items...");
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setProgress(0);
+            progressDialog.show();
+
+        }
+        protected JSONObject doInBackground(String... params) {
+            try {
+                PretixApi api = new PretixApi(
+                        prefs.getString("pref_URL", ""),
+                        prefs.getString("pref_APIkey", ""),
+                        prefs.getString("pref_organizer", ""),
+                        prefs.getString("pref_event", "")
+                );
+
+                return api.getItemNames();
+            } catch (Exception e) {
+                this.exception = e;
+
+                return null;
+            }
+        }
+
+        protected void onPostExecute(JSONObject response) {
+            progressDialog.hide();
+
+            try {
+                if (response.has("results")) {
+                    itemNames.clear();
+
+                    JSONArray items = response.getJSONArray("results");
+
+                    for (int i = 0; i < items.length(); i++) {
+                        JSONObject item = (JSONObject) items.get(i);
+                        itemNames.put(item.getInt("id"), item.getJSONObject("name").getString("en"));
+                    }
+                } else {
+                    throw new Exception(response.toString());
+                }
+
+            } catch (Exception e) {
+                alertDialog = new AlertDialog.Builder(context);
+                alertDialog.setTitle("Error - Getting items");
+                alertDialog.setMessage("Something went wrong getting the items");
+                alertDialog.setNeutralButton("Dismiss", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                alertDialog.show();
+            }
+        }
+    }
+
 
     private class MarkAsPaidTask extends AsyncTask<String, Void, JSONObject> {
         private Exception exception;
@@ -454,9 +526,6 @@ public class CashpointActivity extends AppCompatActivity {
         */
     }
 
-    /*
-     * SendDataString
-     */
     private void SendDataString(String data) {
 
         if (mService.getState() != BluetoothService.STATE_CONNECTED) {
@@ -474,9 +543,6 @@ public class CashpointActivity extends AppCompatActivity {
         }
     }
 
-    /*
-     *SendDataByte
-     */
     private void SendDataByte(byte[] data) {
 
         if (mService.getState() != BluetoothService.STATE_CONNECTED) {
