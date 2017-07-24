@@ -1,6 +1,5 @@
 package de.pccoholic.pretix.cashpoint;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
@@ -24,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.ebanx.swipebtn.OnActiveListener;
 import com.ebanx.swipebtn.SwipeButton;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
@@ -40,6 +41,7 @@ import zj.com.cn.bluetooth.sdk.BluetoothService;
 import zj.com.command.sdk.PrinterCommand;
 
 public class CashpointActivity extends AppCompatActivity {
+    // ESC/POS related stuff
     // Message types sent from the BluetoothService Handler
     public static final int MESSAGE_STATE_CHANGE = 1;
     public static final int MESSAGE_READ = 2;
@@ -71,12 +73,10 @@ public class CashpointActivity extends AppCompatActivity {
     // Member object for the services
     private BluetoothService mService = null;
 
-
-
+    // Non-ESC/POS related stuff
     private View contentView;
     private SharedPreferences prefs;
     private BluetoothDeviceManager deviceManager;
-    private BluetoothDevice printerDevice;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -312,8 +312,12 @@ public class CashpointActivity extends AppCompatActivity {
                     expiryDate.setText(response.getString("expires"));
                     internalComment.setText(response.getString("comment"));
 
-                    Toast.makeText(CashpointActivity.this, "ToDo: Populate ListView with OrderItems", Toast.LENGTH_SHORT).show();
+                    JSONArray jArray = response.getJSONArray("positions");
 
+                    JSONAdapter jSONAdapter = new JSONAdapter(CashpointActivity.this, jArray);
+                    orderItems.setAdapter(jSONAdapter);
+
+                    //Toast.makeText(CashpointActivity.this, "ToDo: Populate ListView with OrderItems", Toast.LENGTH_SHORT).show();
                 } else {
                     throw new Exception(response.toString());
                 }
@@ -439,7 +443,7 @@ public class CashpointActivity extends AppCompatActivity {
 
     private void testPrint() {
         /*
-        String msg = "Division I is a research and development, production and services in one high-tech research and development, production-oriented enterprises, specializing in POS terminals finance, retail, restaurants, bars, songs and other areas, computer terminals, self-service terminal peripheral equipment R & D, manufacturing and sales! \n company's organizational structure concise and practical, pragmatic style of rigorous, efficient operation. Integrity, dedication, unity, and efficient is the company's corporate philosophy, and constantly strive for today, vibrant, the company will be strong scientific and technological strength, eternal spirit of entrepreneurship, the pioneering and innovative attitude, confidence towards the international information industry, with friends to create brilliant information industry !!! \n\n\n";
+        String msg = "Testmessage \n\n\n";
         SendDataString(msg);
         */
         /*
@@ -483,7 +487,6 @@ public class CashpointActivity extends AppCompatActivity {
         mService.write(data);
     }
 
-    @SuppressLint("HandlerLeak")
     private final Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
