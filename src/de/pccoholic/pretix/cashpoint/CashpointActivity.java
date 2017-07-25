@@ -19,7 +19,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -295,7 +294,7 @@ public class CashpointActivity extends AppCompatActivity {
                             printTickets.setOnActiveListener(new OnActiveListener() {
                                 @Override
                                 public void onActive() {
-                                    printOrderTicket();
+                                    printOrderTicket(orderId);
                                 }
                             });
                             break;
@@ -527,8 +526,18 @@ public class CashpointActivity extends AppCompatActivity {
         }
     }
 
-    private void printOrderTicket() {
-        SendDataString("SHA2017 \n\n\n");
+    private void printOrderTicket(String orderCode) {
+        SendDataByte(PrinterCommand.POS_Set_PrtInit());
+        SendDataByte(PrinterCommand.POS_S_Align(1));
+        SendDataByte(PrinterCommand.POS_Set_Bold(1));
+        SendDataString(prefs.getString("pref_event", "pretix Cashpoint"));
+        SendDataByte(PrinterCommand.POS_Set_LF());
+        SendDataByte(PrinterCommand.POS_Set_LF());
+        SendDataByte(PrinterCommand.POS_S_Align(0));
+        SendDataByte(PrinterCommand.POS_Set_Bold(0));
+        SendDataString("Order Code: " + orderCode);
+        SendDataByte(PrinterCommand.POS_Set_LF());
+        SendDataByte(PrinterCommand.POS_Set_LF());
 
         ListView orderItems = (ListView) findViewById(R.id.orderItems);
         for (int i = 0; i < orderItems.getAdapter().getCount(); i++) {
@@ -537,8 +546,9 @@ public class CashpointActivity extends AppCompatActivity {
             String secret = null;
             String price = null;
             Integer ticketType = null;
-            String attendeeName = null;
-            String attendeeEmail = null;
+            Integer ticketVariation = null;
+            String attendeeName = "";
+            String attendeeEmail = "";
 
             try {
                 secret = item.getString("secret");
@@ -551,11 +561,24 @@ public class CashpointActivity extends AppCompatActivity {
             }
 
             SendDataString(itemNames.get(ticketType) + "\n");
-
+            SendDataString(secret + "\n");
+            SendDataByte(PrinterCommand.POS_S_Align(1));
+            SendDataByte(PrinterCommand.POS_Set_Bold(1));
             SendDataByte(new byte[]{0x1b, 0x61, 0x00 });
             SendDataByte(PrinterCommand.getBarCommand((String) secret, 1, 3, 8));
-            SendDataString(secret + "\n\n\n\n\n\n");
+            SendDataByte(PrinterCommand.POS_S_Align(1));
+            SendDataByte(PrinterCommand.POS_Set_Bold(1));
+            SendDataString("* * * * * * *");
+            SendDataByte(PrinterCommand.POS_Set_LF());
+            SendDataByte(PrinterCommand.POS_Set_LF());
+            SendDataByte(PrinterCommand.POS_S_Align(0));
+            SendDataByte(PrinterCommand.POS_Set_Bold(0));
+
         }
+
+        SendDataByte(PrinterCommand.POS_Set_LF());
+        SendDataByte(PrinterCommand.POS_Set_LF());
+        SendDataByte(PrinterCommand.POS_Set_LF());
     }
 
     private void SendDataString(String data) {

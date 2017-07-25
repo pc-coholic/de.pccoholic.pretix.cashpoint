@@ -175,8 +175,11 @@ public class PrinterCommand {
      * @return
      */
     public static byte[] POS_S_Align(int align) {
+        // This function seems flawed.
+        /*
         if ((align < 0 || align > 2) | (align <48 || align >50))
             return null;
+        */
 
         byte[] data = Command.ESC_Align;
         data[2] = (byte) align;
