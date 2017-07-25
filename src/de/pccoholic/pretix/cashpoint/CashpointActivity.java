@@ -19,6 +19,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -81,6 +82,7 @@ public class CashpointActivity extends AppCompatActivity {
     private SharedPreferences prefs;
     private BluetoothDeviceManager deviceManager;
     public static Map<Integer,String> itemNames;
+    public static Map<Integer,String> itemVariations;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,6 +91,7 @@ public class CashpointActivity extends AppCompatActivity {
         contentView = this.findViewById(android.R.id.content);
         deviceManager = new BluetoothDeviceManager(this);
         itemNames = new HashMap<Integer, String>();
+        itemVariations = new HashMap<Integer, String>();
 
         // Get local Bluetooth adapter
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -383,12 +386,21 @@ public class CashpointActivity extends AppCompatActivity {
             try {
                 if (response.has("results")) {
                     itemNames.clear();
+                    itemVariations.clear();
 
                     JSONArray items = response.getJSONArray("results");
 
                     for (int i = 0; i < items.length(); i++) {
                         JSONObject item = (JSONObject) items.get(i);
-                        itemNames.put(item.getInt("id"), item.getJSONObject("name").getString("en"));
+                        itemNames.put(item.getInt("id"), item.getJSONObject("name").getString(prefs.getString("pref_language", "en")));
+
+                        JSONArray variations = item.getJSONArray("variations");
+                        if (variations.length() > 0) {
+                            for (i = 0; i < variations.length(); i++) {
+                                JSONObject variation = (JSONObject) variations.get(i);
+                                itemVariations.put(variation.getInt("id"), variation.getJSONObject("value").getString(prefs.getString("pref_language", "en")));
+                            }
+                        }
                     }
                 } else {
                     throw new Exception(response.toString());

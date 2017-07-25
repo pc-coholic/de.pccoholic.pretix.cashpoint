@@ -66,13 +66,15 @@ class JSONAdapter extends BaseAdapter implements ListAdapter {
             String secret = null;
             String price = null;
             Integer ticketType = null;
-            String attendeeName = null;
-            String attendeeEmail = null;
+            Integer ticketVariation = null;
+            String attendeeName = "";
+            String attendeeEmail = "";
 
             try {
                 secret = json_data.getString("secret");
                 price = json_data.getString("price");
                 ticketType = json_data.getInt("item");
+                ticketVariation = json_data.getInt("variation");
                 attendeeName = json_data.getString("attendee_name");
                 attendeeEmail = json_data.getString("attendee_email");
             } catch (JSONException e) {
@@ -82,9 +84,13 @@ class JSONAdapter extends BaseAdapter implements ListAdapter {
 
             tvSecret.setText(secret);
             tvPrice.setText(price);
-            tvTicketName.setText(CashpointActivity.itemNames.get(ticketType)); // ToDo: Add Human-readable name
             tvAttendeeName.setText(attendeeName);
             tvAttendeeEmail.setText(attendeeEmail);
+            if (ticketVariation != null) {
+                tvTicketName.setText(CashpointActivity.itemNames.get(ticketType) + " - " + CashpointActivity.itemVariations.get(ticketVariation));
+            } else {
+                tvTicketName.setText(CashpointActivity.itemNames.get(ticketType));
+            }
         }
 
         return convertView;

@@ -22,5 +22,10 @@
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="Event" />
+        <EditTextPreference
+            android:key="pref_language"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Language shortcode (e.g. 'en')" />
     </PreferenceCategory>
 </PreferenceScreen>
