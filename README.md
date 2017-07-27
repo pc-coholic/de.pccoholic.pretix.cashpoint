@@ -1,4 +1,4 @@
-# <img src="https://raw.githubusercontent.com/pc-coholic/de.pccoholic.pretix.cashpoint/master/img/web_hi_res_512.png?token=AAn81D95OzYStN29rR9wewO7HdbHAR_Xks5Zg2wMwA%3D%3D" width="100" height="100" /> de.pccoholic.pretix.cashpoint
+# <img src="https://raw.githubusercontent.com/pc-coholic/de.pccoholic.pretix.cashpoint/master/img/web_hi_res_512.png" width="100" height="100" /> de.pccoholic.pretix.cashpoint
 
 Pretix Cashdesk Android App
 
