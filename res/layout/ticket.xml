@@ -19,7 +19,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:background="@color/pretix_yellow"
-                android:text="Pending"
                 android:textAlignment="center"
                 android:textColor="@android:color/white"
                 android:textSize="36sp"
@@ -36,7 +35,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="Total: "
+                    android:text="@string/total"
                     android:textAlignment="center"
                     android:textSize="36sp"
                     android:textStyle="bold" />
@@ -46,7 +45,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="42.23"
                     android:textAlignment="center"
                     android:textSize="36sp"
                     android:textStyle="bold" />
@@ -59,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                app:inner_text="Mark as Paid"
+                app:inner_text="@string/markAsPaid"
                 app:inner_text_color="@android:color/white"
                 app:inner_text_size="16sp"
                 app:inner_text_top_padding="18dp"
@@ -81,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                app:inner_text="Print Tickets"
+                app:inner_text="@string/printTickets"
                 app:inner_text_color="@android:color/white"
                 app:inner_text_size="16sp"
                 app:inner_text_top_padding="18dp"
@@ -112,14 +110,13 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight=".5"
-                    android:text="Order:" />
+                    android:text="@string/order" />
 
                 <TextView
                     android:id="@+id/orderCode"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight=".5"
-                    android:text="123ABC" />
+                    android:layout_weight=".5" />
             </LinearLayout>
 
             <LinearLayout
@@ -133,14 +130,13 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight=".5"
-                    android:text="Payment Provider:" />
+                    android:text="@string/paymentProvider" />
 
                 <TextView
                     android:id="@+id/paymentProvider"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight=".5"
-                    android:text="Cash Payment" />
+                    android:layout_weight=".5" />
             </LinearLayout>
 
             <LinearLayout
@@ -153,14 +149,13 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight=".5"
-                    android:text="eMail:" />
+                    android:text="@string/eMail" />
 
                 <TextView
                     android:id="@+id/email"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:text="customer@example.com" />
+                    android:layout_weight="0.5" />
 
             </LinearLayout>
 
@@ -174,14 +169,13 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight=".5"
-                    android:text="Order Date:" />
+                    android:text="@string/orderDate" />
 
                 <TextView
                     android:id="@+id/orderDate"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:text="01.01.1970 00:00:00" />
+                    android:layout_weight="0.5" />
 
             </LinearLayout>
 
@@ -195,14 +189,13 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight=".5"
-                    android:text="Expiry Date:" />
+                    android:text="@string/expiryDate" />
 
                 <TextView
                     android:id="@+id/expiryDate"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:text="01.01.1970 00:00:00" />
+                    android:layout_weight="0.5" />
 
             </LinearLayout>
 
@@ -214,13 +207,12 @@
                 android:id="@+id/labelInternalComment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Internal Comment:" />
+                android:text="@string/internalComment" />
 
             <TextView
                 android:id="@+id/internalComment"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="This is a filler-text" />
+                android:layout_height="wrap_content" />
 
             <Space
                 android:layout_width="match_parent"
@@ -233,5 +225,4 @@
                 android:padding="8dp" />
         </LinearLayout>
     </ScrollView>
-
 </LinearLayout>

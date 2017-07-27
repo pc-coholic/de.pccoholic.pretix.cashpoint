@@ -1,6 +1,49 @@
 <resources>
     <string name="app_name">pretix Cashpoint</string>
+    <!-- res/xml/preferences.xml -->
+    <string name="pref_title">Preferences</string>
+    <string name="pref_title_URL">Pretix URL (including trailing slash)</string>
+    <string name="pref_title_APIkey">API Key</string>
+    <string name="pref_title_organizer">Organizer</string>
+    <string name="pref_title_event">Event</string>
+    <string name="pref_title_language">Language shortcode (e.g. "en")</string>
+    <string name="pref_value_language">en</string>
+    <string name="pref_title_printerAddr">Bluetooth Printer Address</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- res/layout/scannow.xml -->
+    <string name="scanTicketNow">Scan Ticket now</string>
+
+    <!-- res/layout/ticket.xml -->
+    <string name="total">Total: </string>
+    <string name="markAsPaid">Mark as Paid</string>
+    <string name="printTickets">Print Tickets</string>
+    <string name="order">Order: </string>
+    <string name="paymentProvider">Payment Provider:</string>
+    <string name="eMail">eMail: </string>
+    <string name="orderDate">Order Date: </string>
+    <string name="expiryDate">Expiry Date: </string>
+    <string name="internalComment">Internal Comment: </string>
+
+    <!-- java/de.pccoholic.pretix.cashpoint/CashpointActivity.java -->
+    <string name="bluetoothIsNotAvailable">Bluetooth is not available</string>
+    <string name="loading">Loading...</string>
+    <string name="status_pending">Pending</string>
+    <string name="status_paid">Paid</string>
+    <string name="status_expired">Expired</string>
+    <string name="status_canceled">Canceled</string>
+    <string name="status_refunded">Refunded</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="loadingItems">Loading Items...</string>
+    <string name="errorGettingItems">Error - Getting items</string>
+    <string name="errorGettingItemsMsg">Something went wrong getting the items</string>
+    <string name="errorOrderIsPending">Order is Pending - this error should not have occured.</string>
+    <string name="errorOrderIsPaid">Order is already Paid!</string>
+    <string name="errorOrderIsExpired">Order is already Expired!</string>
+    <string name="errorOrderIsCanceled">Order is already Canceled!</string>
+    <string name="errorOrderIsRefunded">Order is already Refunded!</string>
+    <string name="error">Error</string>
+    <string name="printerNotConnected">Printer not connected</string>
+    <string name="connectedTo">Connected to </string>
+    <string name="deviceConnectionLost">Device connection was lost</string>
+    <string name="unableToConnectDevice">Unable to connect device</string>
 </resources>

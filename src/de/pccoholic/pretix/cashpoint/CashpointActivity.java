@@ -97,7 +97,7 @@ public class CashpointActivity extends AppCompatActivity {
 
         // If the adapter is null, then Bluetooth is not supported
         if (mBluetoothAdapter == null) {
-            Toast.makeText(this, "Bluetooth is not available",
+            Toast.makeText(this, getResources().getText(R.string.bluetoothIsNotAvailable),
                     Toast.LENGTH_LONG).show();
             finish();
         }
@@ -217,7 +217,6 @@ public class CashpointActivity extends AppCompatActivity {
         private Context context;
         private View contentView;
         private String orderId;
-        //private SharedPreferences prefs;
         private ProgressDialog progressDialog;
         private AlertDialog.Builder alertDialog;
 
@@ -225,14 +224,13 @@ public class CashpointActivity extends AppCompatActivity {
             this.context = context;
             this.contentView = contentView;
             this.orderId = orderId;
-            //this.prefs =  PreferenceManager.getDefaultSharedPreferences(context);
         }
 
         protected void onPreExecute() {
             super.onPreExecute();
             progressDialog = new ProgressDialog(context);
             progressDialog.setCancelable(true);
-            progressDialog.setMessage("Loading...");
+            progressDialog.setMessage(getResources().getString(R.string.loading));
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progressDialog.setProgress(0);
             progressDialog.show();
@@ -278,7 +276,7 @@ public class CashpointActivity extends AppCompatActivity {
 
                     switch (response.getString("status")) {
                         case "n":
-                            orderStatus.setText("Pending");
+                            orderStatus.setText(getResources().getText(R.string.status_pending));
                             orderStatus.setBackgroundColor(ContextCompat.getColor(context, R.color.pretix_yellow));
                             markAsPaid.setVisibility(View.VISIBLE);
 
@@ -291,7 +289,7 @@ public class CashpointActivity extends AppCompatActivity {
                             });
                             break;
                         case "p":
-                            orderStatus.setText("Paid");
+                            orderStatus.setText(getResources().getText(R.string.status_paid));
                             orderStatus.setBackgroundColor(ContextCompat.getColor(context, R.color.pretix_green));
                             printTickets.setVisibility(View.VISIBLE);
 
@@ -303,15 +301,15 @@ public class CashpointActivity extends AppCompatActivity {
                             });
                             break;
                         case "e":
-                            orderStatus.setText("Expired");
+                            orderStatus.setText(getResources().getText(R.string.status_expired));
                             orderStatus.setBackgroundColor(ContextCompat.getColor(context, R.color.pretix_red));
                             break;
                         case "c":
-                            orderStatus.setText("Canceled");
+                            orderStatus.setText(getResources().getText(R.string.status_canceled));
                             orderStatus.setBackgroundColor(ContextCompat.getColor(context, R.color.pretix_red));
                             break;
                         case "r":
-                            orderStatus.setText("Refunded");
+                            orderStatus.setText(getResources().getText(R.string.status_refunded));
                             orderStatus.setBackgroundColor(ContextCompat.getColor(context, R.color.pretix_red));
                             break;
                     }
@@ -336,7 +334,7 @@ public class CashpointActivity extends AppCompatActivity {
                 alertDialog = new AlertDialog.Builder(context);
                 alertDialog.setTitle("Error");
                 alertDialog.setMessage(this.exception.getMessage().toString());
-                alertDialog.setNeutralButton("Dismiss", new DialogInterface.OnClickListener() {
+                alertDialog.setNeutralButton(getResources().getText(R.string.dismiss), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
@@ -360,7 +358,7 @@ public class CashpointActivity extends AppCompatActivity {
             super.onPreExecute();
             progressDialog = new ProgressDialog(context);
             progressDialog.setCancelable(true);
-            progressDialog.setMessage("Loading Items...");
+            progressDialog.setMessage(getResources().getText(R.string.loadingItems));
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progressDialog.setProgress(0);
             progressDialog.show();
@@ -411,9 +409,9 @@ public class CashpointActivity extends AppCompatActivity {
 
             } catch (Exception e) {
                 alertDialog = new AlertDialog.Builder(context);
-                alertDialog.setTitle("Error - Getting items");
-                alertDialog.setMessage("Something went wrong getting the items");
-                alertDialog.setNeutralButton("Dismiss", new DialogInterface.OnClickListener() {
+                alertDialog.setTitle(getResources().getString(R.string.errorGettingItems));
+                alertDialog.setMessage(getResources().getString(R.string.errorGettingItemsMsg));
+                alertDialog.setNeutralButton(getResources().getString(R.string.dismiss), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
@@ -442,7 +440,7 @@ public class CashpointActivity extends AppCompatActivity {
             super.onPreExecute();
             progressDialog = new ProgressDialog(context);
             progressDialog.setCancelable(true);
-            progressDialog.setMessage("Loading...");
+            progressDialog.setMessage(getResources().getString(R.string.loading));
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progressDialog.setProgress(0);
             progressDialog.show();
@@ -478,15 +476,15 @@ public class CashpointActivity extends AppCompatActivity {
                         case "error":
                             switch (response.getString("reason")) {
                                 case "n":
-                                    throw new Exception("Order is Pending - this error should not have occured.");
+                                    throw new Exception(getResources().getString(R.string.errorOrderIsPending));
                                 case "p":
-                                    throw new Exception("Order is already Paid!");
+                                    throw new Exception(getResources().getString(R.string.errorOrderIsPaid));
                                 case "e":
-                                    throw new Exception("Order is already Expired!");
+                                    throw new Exception(getResources().getString(R.string.errorOrderIsExpired));
                                 case "c":
-                                    throw new Exception("Order is already Canceled!");
+                                    throw new Exception(getResources().getString(R.string.errorOrderIsCanceled));
                                 case "r":
-                                    throw new Exception("Order is already Refunded!");
+                                    throw new Exception(getResources().getString(R.string.errorOrderIsRefunded));
                             }
                         default:
                             throw new Exception(response.toString());
@@ -496,9 +494,9 @@ public class CashpointActivity extends AppCompatActivity {
                 }
             } catch (Exception e) {
                 alertDialog = new AlertDialog.Builder(context);
-                alertDialog.setTitle("Error");
+                alertDialog.setTitle(getResources().getString(R.string.error));
                 alertDialog.setMessage(this.exception.getMessage().toString());
-                alertDialog.setNeutralButton("Dismiss", new DialogInterface.OnClickListener() {
+                alertDialog.setNeutralButton(getResources().getString(R.string.dismiss), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
@@ -540,7 +538,7 @@ public class CashpointActivity extends AppCompatActivity {
         SendDataByte(PrinterCommand.POS_Set_LF());
         SendDataByte(PrinterCommand.POS_S_Align(0));
         SendDataByte(PrinterCommand.POS_Set_Bold(0));
-        SendDataString("Order Code: " + orderCode);
+        SendDataString(getResources().getString(R.string.order) + orderCode);
         SendDataByte(PrinterCommand.POS_Set_LF());
         SendDataByte(PrinterCommand.POS_Set_LF());
 
@@ -589,7 +587,7 @@ public class CashpointActivity extends AppCompatActivity {
     private void SendDataString(String data) {
 
         if (mService.getState() != BluetoothService.STATE_CONNECTED) {
-            Toast.makeText(this, "Printer not connected", Toast.LENGTH_SHORT)
+            Toast.makeText(this, getResources().getString(R.string.printerNotConnected), Toast.LENGTH_SHORT)
                     .show();
             return;
         }
@@ -606,7 +604,7 @@ public class CashpointActivity extends AppCompatActivity {
     private void SendDataByte(byte[] data) {
 
         if (mService.getState() != BluetoothService.STATE_CONNECTED) {
-            Toast.makeText(this, "Printer not connected", Toast.LENGTH_SHORT)
+            Toast.makeText(this, getResources().getString(R.string.printerNotConnected), Toast.LENGTH_SHORT)
                     .show();
             return;
         }
@@ -637,7 +635,7 @@ public class CashpointActivity extends AppCompatActivity {
                     // save the connected device's name
                     mConnectedDeviceName = msg.getData().getString(DEVICE_NAME);
                     Toast.makeText(getApplicationContext(),
-                            "Connected to " + mConnectedDeviceName,
+                            getResources().getString(R.string.connectedTo) + mConnectedDeviceName,
                             Toast.LENGTH_SHORT).show();
                     break;
                 case MESSAGE_TOAST:
@@ -646,11 +644,11 @@ public class CashpointActivity extends AppCompatActivity {
                             .show();
                     break;
                 case MESSAGE_CONNECTION_LOST:
-                    Toast.makeText(getApplicationContext(), "Device connection was lost",
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.deviceConnectionLost),
                             Toast.LENGTH_SHORT).show();
                     break;
                 case MESSAGE_UNABLE_CONNECT:
-                    Toast.makeText(getApplicationContext(), "Unable to connect device",
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.unableToConnectDevice),
                             Toast.LENGTH_SHORT).show();
                     break;
             }

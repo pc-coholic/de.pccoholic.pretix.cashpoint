@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <PreferenceCategory android:title="Preferences">
+    <PreferenceCategory android:title="@string/pref_title">
         <EditTextPreference
             android:key="pref_URL"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:title="Pretix URL (including trailing slash)" />
+            android:title="@string/pref_title_URL" />
         <EditTextPreference
             android:key="pref_APIkey"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:title="API Key" />
+            android:title="@string/pref_title_APIkey" />
         <EditTextPreference
             android:key="pref_organizer"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:title="Organizer" />
+            android:title="@string/pref_title_organizer" />
         <EditTextPreference
             android:key="pref_event"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:title="Event" />
+            android:title="@string/pref_title_event" />
         <EditTextPreference
             android:key="pref_language"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:title="Language shortcode (e.g. 'en')" />
+            android:title="@string/pref_title_language"
+            android:defaultValue="@string/pref_value_language" />
         <EditTextPreference
             android:key="pref_printerAddr"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:title="Bluetooth Printer Address" />
+            android:title="@string/pref_title_printerAddr" />
     </PreferenceCategory>
 </PreferenceScreen>
