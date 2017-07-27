@@ -86,7 +86,8 @@ public class CashpointActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.scannow);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        setContentView(getScanBackground());
         contentView = this.findViewById(android.R.id.content);
         deviceManager = new BluetoothDeviceManager(this);
         itemNames = new HashMap<Integer, String>();
@@ -144,8 +145,11 @@ public class CashpointActivity extends AppCompatActivity {
             BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(prefs.getString("pref_printerAddr", null));
             mService.connect(device);
         }
-        // ToDo: check if preferences are set and launch SettingsActivity if not and show information-Toast
-        new GetItemNamesTask(CashpointActivity.this).execute();
+
+        if (getScanBackground() == R.layout.scannow) {
+            new GetItemNamesTask(CashpointActivity.this).execute();
+
+        }
     }
 
     @Override
@@ -181,7 +185,7 @@ public class CashpointActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String query) {
-                setContentView(R.layout.scannow);
+                setContentView(getScanBackground());
                 return true;
             }
         });
@@ -509,7 +513,7 @@ public class CashpointActivity extends AppCompatActivity {
     private BroadcastReceiver scanReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            setContentView(R.layout.scannow);
+            setContentView(getScanBackground());
 
             // Intent receiver for LECOM-manufactured hardware scanners
             byte[] barcode = intent.getByteArrayExtra("barocode"); // sic!
@@ -654,4 +658,16 @@ public class CashpointActivity extends AppCompatActivity {
             }
         }
     };
+
+    private int getScanBackground() {
+        if (prefs.getString("pref_URL", "").isEmpty()
+                || prefs.getString("pref_URL", "").isEmpty()
+                || prefs.getString("pref_APIkey", "").isEmpty()
+                || prefs.getString("pref_organizer", "").isEmpty()
+                || prefs.getString("pref_event", "").isEmpty()) {
+            return R.layout.mustconfigure;
+        } else {
+            return R.layout.scannow;
+        }
+    }
 }

@@ -13,6 +13,9 @@
     <!-- res/layout/scannow.xml -->
     <string name="scanTicketNow">Scan Ticket now</string>
 
+    <!-- res/layout/mustconfigure.xml -->
+    <string name="pleaseConfigureNow">Please Configure Device now</string>
+
     <!-- res/layout/ticket.xml -->
     <string name="total">Total: </string>
     <string name="markAsPaid">Mark as Paid</string>
