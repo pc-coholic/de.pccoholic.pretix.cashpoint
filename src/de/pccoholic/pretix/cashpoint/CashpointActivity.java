@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -281,7 +282,7 @@ public class CashpointActivity extends AppCompatActivity {
                     switch (response.getString("status")) {
                         case "n":
                             orderStatus.setText(getResources().getText(R.string.status_pending));
-                            orderStatus.setBackgroundColor(ContextCompat.getColor(context, R.color.pretix_yellow));
+                            orderStatus.getBackground().setColorFilter(ContextCompat.getColor(context, R.color.pretix_yellow), PorterDuff.Mode.MULTIPLY);
                             markAsPaid.setVisibility(View.VISIBLE);
 
                             markAsPaid.setOnActiveListener(new OnActiveListener() {
@@ -294,7 +295,7 @@ public class CashpointActivity extends AppCompatActivity {
                             break;
                         case "p":
                             orderStatus.setText(getResources().getText(R.string.status_paid));
-                            orderStatus.setBackgroundColor(ContextCompat.getColor(context, R.color.pretix_green));
+                            orderStatus.getBackground().setColorFilter(ContextCompat.getColor(context, R.color.pretix_green), PorterDuff.Mode.MULTIPLY);
                             printTickets.setVisibility(View.VISIBLE);
 
                             printTickets.setOnActiveListener(new OnActiveListener() {
@@ -306,15 +307,15 @@ public class CashpointActivity extends AppCompatActivity {
                             break;
                         case "e":
                             orderStatus.setText(getResources().getText(R.string.status_expired));
-                            orderStatus.setBackgroundColor(ContextCompat.getColor(context, R.color.pretix_red));
+                            orderStatus.getBackground().setColorFilter(ContextCompat.getColor(context, R.color.pretix_red), PorterDuff.Mode.MULTIPLY);
                             break;
                         case "c":
                             orderStatus.setText(getResources().getText(R.string.status_canceled));
-                            orderStatus.setBackgroundColor(ContextCompat.getColor(context, R.color.pretix_red));
+                            orderStatus.getBackground().setColorFilter(ContextCompat.getColor(context, R.color.pretix_red), PorterDuff.Mode.MULTIPLY);
                             break;
                         case "r":
                             orderStatus.setText(getResources().getText(R.string.status_refunded));
-                            orderStatus.setBackgroundColor(ContextCompat.getColor(context, R.color.pretix_red));
+                            orderStatus.getBackground().setColorFilter(ContextCompat.getColor(context, R.color.pretix_red), PorterDuff.Mode.MULTIPLY);
                             break;
                     }
 
@@ -322,8 +323,8 @@ public class CashpointActivity extends AppCompatActivity {
                     orderCode.setText(response.getString("code"));
                     paymentProvider.setText(response.getString("payment_provider"));
                     email.setText(response.getString("email"));
-                    orderDate.setText(response.getString("datetime"));
-                    expiryDate.setText(response.getString("expires"));
+                    orderDate.setText(response.getString("datetime").substring(0, 19));
+                    expiryDate.setText(response.getString("expires").substring(0, 19));
                     internalComment.setText(response.getString("comment"));
 
                     JSONArray jArray = response.getJSONArray("positions");
