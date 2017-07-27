@@ -134,13 +134,16 @@ public class CashpointActivity extends AppCompatActivity {
         registerReceiver(scanReceiver, filter);
 
         if (mService != null) {
-
             if (mService.getState() == BluetoothService.STATE_NONE) {
                 // Start the Bluetooth services
                 mService.start();
             }
         }
 
+        if (BluetoothAdapter.checkBluetoothAddress(prefs.getString("pref_printerAddr", null))) {
+            BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(prefs.getString("pref_printerAddr", null));
+            mService.connect(device);
+        }
         // ToDo: check if preferences are set and launch SettingsActivity if not and show information-Toast
         new GetItemNamesTask(CashpointActivity.this).execute();
     }
@@ -199,6 +202,7 @@ public class CashpointActivity extends AppCompatActivity {
                     @Override
                     public void onDevicePicked(BluetoothDevice device) {
                         mService.connect(device);
+                        prefs.edit().putString("pref_printerAddr", device.getAddress()).commit();
                     }
                 });
                 return true;
@@ -527,6 +531,7 @@ public class CashpointActivity extends AppCompatActivity {
     }
 
     private void printOrderTicket(String orderCode) {
+
         SendDataByte(PrinterCommand.POS_Set_PrtInit());
         SendDataByte(PrinterCommand.POS_S_Align(1));
         SendDataByte(PrinterCommand.POS_Set_Bold(1));
