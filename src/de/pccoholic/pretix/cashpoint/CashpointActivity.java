@@ -402,8 +402,8 @@ public class CashpointActivity extends AppCompatActivity {
 
                         JSONArray variations = item.getJSONArray("variations");
                         if (variations.length() > 0) {
-                            for (i = 0; i < variations.length(); i++) {
-                                JSONObject variation = (JSONObject) variations.get(i);
+                            for (int j = 0; j < variations.length(); j++) {
+                                JSONObject variation = (JSONObject) variations.get(j);
                                 itemVariations.put(variation.getInt("id"), variation.getJSONObject("value").getString(prefs.getString("pref_language", "en")));
                             }
                         }
