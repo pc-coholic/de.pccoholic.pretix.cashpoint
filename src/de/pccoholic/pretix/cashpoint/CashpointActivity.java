@@ -526,8 +526,8 @@ public class CashpointActivity extends AppCompatActivity {
     };
 
     private String prepOrderId(String orderId) {
-        if (orderId.startsWith(prefs.getString("pref_event", ""))) {
-            return orderId.replace(prefs.getString("pref_event", "") + "-", "");
+        if (orderId.toUpperCase().startsWith(prefs.getString("pref_event", "").toUpperCase())) {
+            return orderId.toUpperCase().replace(prefs.getString("pref_event", "").toUpperCase() + "-", "");
         } else {
             return orderId;
         }
