@@ -2,8 +2,8 @@
 
 Pretix Cashdesk Android App
 
-This project has been archived and should be used anymore.
-==========================================================
+This project has been archived and should not be used anymore.
+==============================================================
 At least in Germany and other countries requiring fiscal recording devices (TSE for example in DE), using this application to accept is illegal.
 ================================================================================================================================================
 Please consider using [pretixPOS](https://pretix.eu/about/en/pos) instead, a proper, fully featured cashdesk system.
