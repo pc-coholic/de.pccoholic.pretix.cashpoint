@@ -2,6 +2,12 @@
 
 Pretix Cashdesk Android App
 
+This project has been archived and should be used anymore.
+==========================================================
+At least in Germany and other countries requiring fiscal recording devices (TSE for example in DE), using this application to accept is illegal.
+================================================================================================================================================
+Please consider using [pretixPOS](https://pretix.eu/about/en/pos) instead, a proper, fully featured cashdesk system.
+====================================================================================================================
 
 ## What is this?
 This is a very rudimentary app to mark tickets as paid and print the the QR codes of the corresponding tickets using a Bluetooth printer.
